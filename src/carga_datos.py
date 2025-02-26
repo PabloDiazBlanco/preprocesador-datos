@@ -32,8 +32,6 @@ def mostrar_info_dataset(df):
     print("\nDatos cargados correctamente.")
     print(f"Número de filas: {df.shape[0]}")
     print(f"Número de columnas: {df.shape[1]}")
-    print("Tipos de datos:")
-    print(df.dtypes)
     print("Primeras 5 filas:")
     print(df.head())
 
