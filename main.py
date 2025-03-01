@@ -3,6 +3,7 @@ from src.seleccionar_columnas import seleccionar_columnas
 from src.manejo_valores_faltantes import manejar_valores_faltantes
 from src.transformar_datos_categoricos import transformar_datos_categoricos
 from src.normalizacion_escalado import normalizar_escalar
+from src.deteccion_valores_atipicos import gestionar_valores_atipicos
 
 datos_cargados = None
 features = None
@@ -10,6 +11,7 @@ target = None
 valores_faltantes_gestionados = False
 transformacion_categorica_realizada = False
 normalizacion_escalado_realizado = False
+deteccion_atipicos_realizada = False
 
 def mostrar_menu():
     print("\n=============================")
@@ -39,11 +41,17 @@ def mostrar_menu_preprocesado():
             print("      [✓] 2.2 Manejo de valores faltantes (completado)")
             if transformacion_categorica_realizada:
                 print("      [✓] 2.3 Transformación de datos categóricos (completado)")
-                print("      " + ("[✓] 2.4 Normalización y escalado (completado)" if normalizacion_escalado_realizado else "[-] 2.4 Normalización y escalado (pendiente)"))
+                if normalizacion_escalado_realizado:
+                    print("      [✓] 2.4 Normalización y escalado (completado)")
+                else:
+                    print("      [-] 2.4 Normalización y escalado (pendiente)")
             else:
                 print("      [-] 2.3 Transformación de datos categóricos (pendiente)")
                 print("      [✗] 2.4 Normalización y escalado (requiere transformación categórica)")
-            print("      [✗] 2.5 Detección y manejo de valores atípicos (requiere normalización)")
+            if deteccion_atipicos_realizada:
+                print("      [✓] 2.5 Detección y manejo de valores atípicos (completado)")
+            else:
+                print("      [-] 2.5 Detección y manejo de valores atípicos (pendiente)")
         else:
             print("      [-] 2.2 Manejo de valores faltantes (pendiente)")
             print("      [✗] 2.3 Transformación de datos categóricos (requiere manejo de valores faltantes)")
@@ -54,7 +62,7 @@ def mostrar_menu_preprocesado():
     print("[✓] 5. Salir")
 
 def main():
-    global datos_cargados, features, target, valores_faltantes_gestionados, transformacion_categorica_realizada, normalizacion_escalado_realizado
+    global datos_cargados, features, target, valores_faltantes_gestionados, transformacion_categorica_realizada, normalizacion_escalado_realizado, deteccion_atipicos_realizada
     df = None
     while True:
         mostrar_menu()
@@ -63,7 +71,7 @@ def main():
         if opcion == "1":
             df = cargar_datos()
             if df is not None:
-                datos_cargados = "datos.csv"  # Aquí se debe actualizar con el nombre real del archivo cargado
+                datos_cargados = "datos.csv"  # Actualizar con el nombre real del archivo cargado
                 print("\nDatos cargados correctamente en memoria. Puede continuar con el preprocesamiento.")
 
         elif opcion == "2" and datos_cargados:
@@ -79,8 +87,8 @@ def main():
                     df, transformacion_categorica_realizada = transformar_datos_categoricos(df, features)
                 elif sub_opcion == "2.4" and transformacion_categorica_realizada:
                     df, normalizacion_escalado_realizado = normalizar_escalar(df, features)
-                elif sub_opcion == "2.5":
-                    print("Funcionalidad de detección y manejo de valores atípicos aún no implementada.")
+                elif sub_opcion == "2.5" and normalizacion_escalado_realizado:
+                    df, deteccion_atipicos_realizada = gestionar_valores_atipicos(df, features)
                 elif sub_opcion == "5":
                     print("Saliendo...")
                     return
