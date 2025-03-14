@@ -71,6 +71,9 @@ def gestionar_valores_atipicos(df, features):
                 lower_bound = Q1 - 1.5 * IQR
                 upper_bound = Q3 + 1.5 * IQR
                 median_val = df[col].median()
+                # Si la columna es de tipo entero, convertir la mediana a entero (redondeada)
+                if pd.api.types.is_integer_dtype(df[col]):
+                    median_val = int(round(median_val))
                 df.loc[(df[col] < lower_bound) | (df[col] > upper_bound), col] = median_val
             print("\nValores atípicos reemplazados con la mediana de cada columna.")
             break
