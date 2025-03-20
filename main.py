@@ -147,7 +147,6 @@ def main():
             if df is not None:
                 datos_cargados = "datos.csv"  # Se asume que el archivo es 'datos.csv'
                 df_original = df.copy()  # Guardar copia original para visualización
-                logger.info("Datos cargados correctamente en memoria.")
                 print("\n✔ Datos cargados correctamente en memoria. Puede continuar con el preprocesamiento.")
 
         elif opcion == "2" and datos_cargados:
@@ -157,52 +156,39 @@ def main():
                 sub_opcion = input("Seleccione una opción de preprocesado (ej: 2.1, 2.2, etc.): ")
                 if sub_opcion == "2.1":
                     features, target = seleccionar_columnas(df)
-                    logger.info("Columnas seleccionadas correctamente.")
                 elif sub_opcion == "2.2":
                     if features and target:
                         df, valores_faltantes_gestionados = manejar_valores_faltantes(df, features, target)
-                        logger.info("Valores faltantes gestionados correctamente.")
                     else:
-                        logger.error("Error: Primero debe seleccionar las columnas (2.1).")
                         print("⚠ Error: Primero debe seleccionar las columnas (2.1).")
                 elif sub_opcion == "2.3":
                     if valores_faltantes_gestionados:
                         df, transformacion_categorica_realizada = transformar_datos_categoricos(df, features)
-                        logger.info("Datos categóricos transformados correctamente.")
                     else:
-                        logger.error("Error: Primero debe manejar los valores faltantes (2.2).")
                         print("⚠ Error: Primero debe manejar los valores faltantes (2.2).")
                 elif sub_opcion == "2.4":
                     if transformacion_categorica_realizada:
                         df, normalizacion_escalado_realizado = normalizar_escalar(df, features)
-                        logger.info("Datos normalizados y escalados correctamente.")
                     else:
-                        logger.error("Error: Primero debe transformar los datos categóricos (2.3).")
                         print("⚠ Error: Primero debe transformar los datos categóricos (2.3).")
                 elif sub_opcion == "2.5":
                     if normalizacion_escalado_realizado:
                         df, deteccion_atipicos_realizada = gestionar_valores_atipicos(df, features)
-                        logger.info("Valores atípicos detectados y gestionados correctamente.")
                         print("\n✔ Preprocesamiento completado. Volviendo al menú principal...\n")
                     else:
-                        logger.error("Error: Primero debe normalizar y escalar los datos (2.4).")
                         print("⚠ Error: Primero debe normalizar y escalar los datos (2.4).")
                 else:
-                    logger.error("Error: Opción no válida. Intente de nuevo.")
                     print("⚠ Error: Opción no válida. Intente de nuevo.")
 
                 if preprocesamiento_completo():
-                    logger.info("Preprocesamiento completado correctamente.")
-                    print("\n✔ ¡Preprocesamiento completado!\n")
+                    print("")
                     break
 
         elif opcion == "3":
             if preprocesamiento_completo():
                 visualizar_datos(df_original, df, features)
                 visualizacion_completada = True
-                logger.info("Datos visualizados correctamente.")
             else:
-                logger.error("Error: No es posible visualizar los datos hasta que se complete el preprocesado.")
                 print("⚠ No es posible visualizar los datos hasta que se complete el preprocesado.")
 
         elif opcion == "4":
@@ -210,9 +196,7 @@ def main():
             if preprocesamiento_completo() and visualizacion_completada:
                 exportar_datos(df)
                 exportacion_completada = True
-                logger.info("Datos exportados correctamente.")
             else:
-                logger.error("Error: No es posible exportar los datos hasta que se complete el preprocesado y la visualización.")
                 print("⚠ No es posible exportar los datos hasta que se complete el preprocesado y la visualización.")
 
         elif opcion == "5":
@@ -234,7 +218,6 @@ def main():
                 continue
 
         else:
-            logger.error("Error: Opción no válida o función aún no disponible. Intente de nuevo.")
             print("⚠ Error: Opción no válida o función aún no disponible. Intente de nuevo.")
 
 if __name__ == "__main__":
